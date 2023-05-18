@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import * as React from 'react'
+import ReactDOM from 'react-dom'
+import { ErrorBoundary } from "react-error-boundary";
 
-function App() {
+function fallbackRender({ error, resetErrorBoundary }) {
+  // Call resetErrorBoundary() to reset the error boundary and retry the render.
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div role="alert">
+      <p>Something went wrong:</p>
+      <pre style={{ color: "red" }}>{error.message}</pre>
     </div>
   );
 }
 
-export default App;
+function City({name}) {
+    return <div>Hello, visit {name.toUpperCase()}</div>
+}
+
+function Country({capital}) {
+    return <div>Hello, visit {capital.toUpperCase()}</div>
+}
+
+export default function App() {
+  return (
+    <ErrorBoundary fallbackRender={fallbackRender}  onReset={(details) => {
+      // Reset the state of your app so the error doesn't happen again
+    }}>
+      <Country />
+      <City />
+    </ErrorBoundary>
+  )
+}
